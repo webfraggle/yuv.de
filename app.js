@@ -25,8 +25,8 @@ function rgbToHex(r, g, b) {
 // --- State ---
 
 const state = {
-  y: 128,
-  u: 128,
+  y: 180,
+  u: 84,
   v: 128,
 };
 
@@ -73,7 +73,7 @@ function updateInfoPanel() {
   document.getElementById('val-r').textContent = r;
   document.getElementById('val-g').textContent = g;
   document.getElementById('val-b').textContent = b;
-  document.getElementById('val-hex').textContent = rgbToHex(r, g, b);
+  document.getElementById('val-hex').textContent = rgbToHex(r, g, b).toUpperCase();
 
   document.querySelector('.info-swatch').style.backgroundColor = rgbToHex(r, g, b);
 }
@@ -88,13 +88,25 @@ function updateUvCursor() {
 
 function updateBackground() {
   const [r, g, b] = yuvToRgb(state.y, state.u, state.v);
-  document.body.style.backgroundColor = rgbToHex(r, g, b);
+  const hex = rgbToHex(r, g, b);
+  document.body.style.backgroundColor = hex;
 
-  // Switch text color based on Y value
+  // Colored glow on UV plane
+  const uvContainer = document.querySelector('.uv-container');
+  uvContainer.style.boxShadow = `0 8px 40px ${hex}40, 0 2px 12px ${hex}20`;
+
+  // Colored glow on swatch
+  document.querySelector('.info-swatch').style.boxShadow =
+    `0 4px 20px ${hex}50, 0 2px 8px ${hex}30`;
+
+  // Switch text color based on perceived brightness
   const isDark = state.y <= 128;
-  document.documentElement.style.setProperty('--text-color', isDark ? '#f0f0f0' : '#111');
-  document.documentElement.style.setProperty('--text-secondary', isDark ? '#ccc' : '#555');
-  document.documentElement.style.setProperty('--border-color', isDark ? 'rgba(255,255,255,0.25)' : '#ddd');
+  document.documentElement.style.setProperty('--text-color', isDark ? '#f0f0f0' : '#1a1a1a');
+  document.documentElement.style.setProperty('--text-secondary', isDark ? 'rgba(255,255,255,0.65)' : '#6b6b6b');
+  document.documentElement.style.setProperty('--text-tertiary', isDark ? 'rgba(255,255,255,0.4)' : '#999');
+  document.documentElement.style.setProperty('--border-color', isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)');
+  document.documentElement.style.setProperty('--surface', isDark ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.6)');
+  document.documentElement.style.setProperty('--surface-border', isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)');
 }
 
 // --- Y Slider ---
@@ -106,7 +118,6 @@ const ySliderHandle = document.querySelector('.y-slider-handle');
 function setYFromPointer(clientY) {
   const rect = ySliderTrack.getBoundingClientRect();
   const ratio = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
-  // Top = 255 (white), Bottom = 0 (black)
   state.y = Math.round(255 * (1 - ratio));
   ySlider.setAttribute('aria-valuenow', state.y);
   updateAll();
@@ -134,7 +145,6 @@ ySliderTrack.addEventListener('pointerup', () => {
   yDragging = false;
 });
 
-// Keyboard support for Y slider
 ySlider.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
     state.y = Math.min(255, state.y + (e.shiftKey ? 10 : 1));
@@ -177,7 +187,6 @@ uvContainer.addEventListener('pointerup', () => {
   uvDragging = false;
 });
 
-// Keyboard support for UV plane
 uvCanvas.addEventListener('keydown', (e) => {
   const step = e.shiftKey ? 10 : 1;
   if (e.key === 'ArrowRight') {
@@ -219,7 +228,6 @@ fileInput.addEventListener('change', (e) => {
   }
 });
 
-// Drag & drop
 uploadZone.addEventListener('dragover', (e) => {
   e.preventDefault();
   uploadZone.classList.add('dragover');
@@ -248,7 +256,6 @@ function loadImage(file) {
 }
 
 function decomposeImage(img) {
-  // Cap dimensions at 1200px
   const maxDim = 1200;
   let w = img.width;
   let h = img.height;
@@ -258,7 +265,6 @@ function decomposeImage(img) {
     h = Math.round(h * scale);
   }
 
-  // Draw to offscreen canvas to read pixels
   const offscreen = document.createElement('canvas');
   offscreen.width = w;
   offscreen.height = h;
@@ -266,7 +272,6 @@ function decomposeImage(img) {
   offCtx.drawImage(img, 0, 0, w, h);
   const srcData = offCtx.getImageData(0, 0, w, h).data;
 
-  // Prepare channel canvases
   [channelYCanvas, channelUCanvas, channelVCanvas].forEach(c => {
     c.width = w;
     c.height = h;
@@ -286,22 +291,22 @@ function decomposeImage(img) {
     const b = srcData[i + 2];
     const [yVal, uVal, vVal] = rgbToYuv(r, g, b);
 
-    // Y channel: grayscale
+    // Y: grayscale
     yImg.data[i] = yVal;
     yImg.data[i + 1] = yVal;
     yImg.data[i + 2] = yVal;
     yImg.data[i + 3] = 255;
 
-    // U channel: false color (blue at 0, yellow at 255)
-    uImg.data[i] = Math.round((uVal / 255) * 255);           // R: 0→255
-    uImg.data[i + 1] = Math.round((uVal / 255) * 255);       // G: 0→255
-    uImg.data[i + 2] = Math.round(((255 - uVal) / 255) * 255); // B: 255→0
+    // U: blue↔yellow false color
+    uImg.data[i] = Math.round((uVal / 255) * 255);
+    uImg.data[i + 1] = Math.round((uVal / 255) * 255);
+    uImg.data[i + 2] = Math.round(((255 - uVal) / 255) * 255);
     uImg.data[i + 3] = 255;
 
-    // V channel: false color (cyan at 0, red at 255)
-    vImg.data[i] = Math.round((vVal / 255) * 255);             // R: 0→255
-    vImg.data[i + 1] = Math.round(((255 - vVal) / 255) * 255); // G: 255→0
-    vImg.data[i + 2] = Math.round(((255 - vVal) / 255) * 255); // B: 255→0
+    // V: cyan↔red false color
+    vImg.data[i] = Math.round((vVal / 255) * 255);
+    vImg.data[i + 1] = Math.round(((255 - vVal) / 255) * 255);
+    vImg.data[i + 2] = Math.round(((255 - vVal) / 255) * 255);
     vImg.data[i + 3] = 255;
   }
 
@@ -310,6 +315,15 @@ function decomposeImage(img) {
   vCtx.putImageData(vImg, 0, 0);
 
   channelsContainer.hidden = false;
+
+  // Animate channels in
+  channelsContainer.style.opacity = '0';
+  channelsContainer.style.transform = 'translateY(16px)';
+  requestAnimationFrame(() => {
+    channelsContainer.style.transition = 'opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+    channelsContainer.style.opacity = '1';
+    channelsContainer.style.transform = 'translateY(0)';
+  });
 }
 
 // --- Initial render ---
