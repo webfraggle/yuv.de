@@ -285,3 +285,50 @@ footer a:hover {
     flex-direction: column;
   }
 }
+
+/* Smooth transitions for dynamic theming */
+.info-swatch,
+.info-values dt,
+.info-values dd,
+.info-hex,
+.subtitle,
+footer a,
+.upload-zone,
+.channel-label,
+.y-slider-label {
+  transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.y-slider-track {
+  transition: border-color 0.3s ease;
+}
+
+/* Subtle shadow on UV container */
+.uv-container canvas {
+  box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+}
+
+/* Info swatch shadow */
+.info-swatch {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: background-color 0.15s ease, box-shadow 0.3s ease;
+}
+
+/* Upload zone file name display */
+.upload-zone p {
+  transition: color 0.3s ease;
+}
+
+/* Channel canvas shadow */
+.channel canvas {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+/* Focus styles */
+.y-slider:focus-visible,
+.uv-container canvas:focus-visible,
+.upload-zone:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
