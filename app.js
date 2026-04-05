@@ -131,30 +131,51 @@ const ySlider = document.querySelector('.y-slider');
 const ySliderTrack = document.querySelector('.y-slider-track');
 const ySliderHandle = document.querySelector('.y-slider-handle');
 
-function setYFromPointer(clientY) {
+function setYFromPointer(clientX, clientY) {
   const rect = ySliderTrack.getBoundingClientRect();
-  const ratio = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
-  state.y = Math.round(255 * (1 - ratio));
+  // Detect horizontal layout (mobile): track is wider than tall
+  const isHorizontal = rect.width > rect.height;
+  let ratio;
+  if (isHorizontal) {
+    ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    // Left = 0 (black), Right = 255 (white)
+    state.y = Math.round(255 * ratio);
+  } else {
+    ratio = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+    // Top = 255 (white), Bottom = 0 (black)
+    state.y = Math.round(255 * (1 - ratio));
+  }
   ySlider.setAttribute('aria-valuenow', state.y);
   updateAll();
 }
 
 function updateYSliderHandle() {
-  const ratio = 1 - state.y / 255;
-  ySliderHandle.style.top = (ratio * 100) + '%';
+  const rect = ySliderTrack.getBoundingClientRect();
+  const isHorizontal = rect.width > rect.height;
+  if (isHorizontal) {
+    const ratio = state.y / 255;
+    ySliderHandle.style.left = (ratio * 100) + '%';
+    ySliderHandle.style.top = '';
+  } else {
+    const ratio = 1 - state.y / 255;
+    ySliderHandle.style.top = (ratio * 100) + '%';
+    ySliderHandle.style.left = '';
+  }
 }
 
 let yDragging = false;
 
 ySliderTrack.addEventListener('pointerdown', (e) => {
+  e.preventDefault();
   yDragging = true;
   ySliderTrack.setPointerCapture(e.pointerId);
-  setYFromPointer(e.clientY);
+  setYFromPointer(e.clientX, e.clientY);
 });
 
 ySliderTrack.addEventListener('pointermove', (e) => {
   if (!yDragging) return;
-  setYFromPointer(e.clientY);
+  e.preventDefault();
+  setYFromPointer(e.clientX, e.clientY);
 });
 
 ySliderTrack.addEventListener('pointerup', () => {
@@ -189,6 +210,7 @@ function setUvFromPointer(clientX, clientY) {
 let uvDragging = false;
 
 uvContainer.addEventListener('pointerdown', (e) => {
+  e.preventDefault();
   uvDragging = true;
   uvContainer.setPointerCapture(e.pointerId);
   setUvFromPointer(e.clientX, e.clientY);
@@ -196,6 +218,7 @@ uvContainer.addEventListener('pointerdown', (e) => {
 
 uvContainer.addEventListener('pointermove', (e) => {
   if (!uvDragging) return;
+  e.preventDefault();
   setUvFromPointer(e.clientX, e.clientY);
 });
 
