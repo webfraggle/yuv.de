@@ -147,6 +147,54 @@ ySlider.addEventListener('keydown', (e) => {
   }
 });
 
+// --- UV Plane Interaction ---
+
+const uvContainer = document.querySelector('.uv-container');
+
+function setUvFromPointer(clientX, clientY) {
+  const rect = uvCanvas.getBoundingClientRect();
+  const u = Math.max(0, Math.min(255, Math.round(((clientX - rect.left) / rect.width) * 255)));
+  const v = Math.max(0, Math.min(255, Math.round(((clientY - rect.top) / rect.height) * 255)));
+  state.u = u;
+  state.v = v;
+  updateAll();
+}
+
+let uvDragging = false;
+
+uvContainer.addEventListener('pointerdown', (e) => {
+  uvDragging = true;
+  uvContainer.setPointerCapture(e.pointerId);
+  setUvFromPointer(e.clientX, e.clientY);
+});
+
+uvContainer.addEventListener('pointermove', (e) => {
+  if (!uvDragging) return;
+  setUvFromPointer(e.clientX, e.clientY);
+});
+
+uvContainer.addEventListener('pointerup', () => {
+  uvDragging = false;
+});
+
+// Keyboard support for UV plane
+uvCanvas.addEventListener('keydown', (e) => {
+  const step = e.shiftKey ? 10 : 1;
+  if (e.key === 'ArrowRight') {
+    state.u = Math.min(255, state.u + step);
+  } else if (e.key === 'ArrowLeft') {
+    state.u = Math.max(0, state.u - step);
+  } else if (e.key === 'ArrowDown') {
+    state.v = Math.min(255, state.v + step);
+  } else if (e.key === 'ArrowUp') {
+    state.v = Math.max(0, state.v - step);
+  } else {
+    return;
+  }
+  e.preventDefault();
+  updateAll();
+});
+
 // --- Initial render ---
 
 updateAll();
