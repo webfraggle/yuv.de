@@ -12,8 +12,8 @@
   --text-tertiary: #999;
   --border-color: rgba(0, 0, 0, 0.1);
   --bg-color: #fafaf7;
-  --surface: rgba(255, 255, 255, 0.6);
-  --surface-border: rgba(0, 0, 0, 0.06);
+  --surface: rgba(255, 255, 255, 0.85);
+  --surface-border: rgba(255, 255, 255, 0.9);
 
   --font-display: 'Syne', sans-serif;
   --font-mono: 'Space Mono', monospace;
@@ -89,7 +89,11 @@ main {
   text-transform: uppercase;
   color: var(--text-tertiary);
   margin-bottom: 24px;
-  transition: color 0.4s ease;
+  background: var(--surface);
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 2px;
+  transition: color 0.4s ease, background 0.4s ease;
 }
 
 /* === Hero === */
@@ -106,7 +110,11 @@ main {
   text-transform: uppercase;
   color: var(--text-tertiary);
   margin-bottom: 16px;
-  transition: color 0.4s ease;
+  background: var(--surface);
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 2px;
+  transition: color 0.4s ease, background 0.4s ease;
 }
 
 .hero h1 {
@@ -142,7 +150,11 @@ main {
   color: var(--text-secondary);
   font-weight: 400;
   line-height: 1.6;
-  transition: color 0.4s ease;
+  background: var(--surface);
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 2px;
+  transition: color 0.4s ease, background 0.4s ease;
 }
 
 /* === Picker Layout === */
@@ -173,7 +185,10 @@ main {
   color: var(--text-color);
   text-align: center;
   line-height: 1.2;
-  transition: color 0.4s ease;
+  background: var(--surface);
+  padding: 4px 8px;
+  border-radius: 2px;
+  transition: color 0.4s ease, background 0.4s ease;
 }
 
 .y-slider-sublabel {
@@ -191,7 +206,7 @@ main {
   flex: 1;
   width: 32px;
   background: linear-gradient(to bottom, #fff, #000);
-  border-radius: 16px;
+  border-radius: 4px;
   position: relative;
   border: 1px solid var(--surface-border);
   box-shadow: inset 0 1px 3px rgba(0,0,0,0.08),
@@ -230,7 +245,7 @@ main {
   flex: 1;
   max-width: 500px;
   cursor: crosshair;
-  border-radius: 12px;
+  border-radius: 3px;
   overflow: hidden;
 }
 
@@ -245,8 +260,8 @@ main {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 12px;
-  border: 1px solid var(--surface-border);
+  border-radius: 3px;
+  border: 2px solid var(--surface-border);
   pointer-events: none;
   transition: border-color 0.4s ease;
 }
@@ -305,9 +320,9 @@ main {
 .info-swatch {
   width: 100%;
   height: 56px;
-  border-radius: 10px;
+  border-radius: 3px;
   background: #808080;
-  border: 1px solid var(--surface-border);
+  border: 2px solid var(--surface-border);
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   transition: background-color 0.15s ease,
               box-shadow 0.4s ease,
@@ -317,7 +332,7 @@ main {
 .info-block {
   background: var(--surface);
   border: 1px solid var(--surface-border);
-  border-radius: 8px;
+  border-radius: 3px;
   padding: 10px 12px;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -365,7 +380,7 @@ main {
   padding: 8px;
   background: var(--surface);
   border: 1px solid var(--surface-border);
-  border-radius: 8px;
+  border-radius: 3px;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: color 0.4s ease, background 0.4s ease, border-color 0.4s ease;
@@ -374,8 +389,9 @@ main {
 /* === Upload Zone === */
 
 .upload-zone {
-  border: 1.5px dashed var(--border-color);
-  border-radius: 14px;
+  border: 1.5px dashed var(--surface-border);
+  border-radius: 3px;
+  background: var(--surface);
   padding: 40px 32px;
   text-align: center;
   cursor: pointer;
@@ -430,19 +446,22 @@ main {
 .channel canvas {
   width: 100%;
   height: auto;
-  border-radius: 10px;
+  border-radius: 3px;
   display: block;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
 .channel-label {
-  display: block;
+  display: inline-block;
   margin-top: 10px;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.05em;
-  transition: color 0.4s ease;
+  background: var(--surface);
+  padding: 3px 8px;
+  border-radius: 2px;
+  transition: color 0.4s ease, background 0.4s ease;
 }
 
 .channel-sublabel {
@@ -463,7 +482,12 @@ footer {
   font-size: 0.7rem;
   color: var(--text-tertiary);
   letter-spacing: 0.05em;
-  transition: color 0.4s ease;
+  background: var(--surface);
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 2px;
+  margin: 0 auto;
+  transition: color 0.4s ease, background 0.4s ease;
 }
 
 .footer-rule {
@@ -543,7 +567,7 @@ footer a:hover {
     flex: 1;
     height: 32px;
     width: auto;
-    border-radius: 16px;
+    border-radius: 4px;
     background: linear-gradient(to right, #000, #fff);
   }
 

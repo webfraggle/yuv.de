@@ -105,8 +105,8 @@ function updateBackground() {
   document.documentElement.style.setProperty('--text-secondary', isDark ? 'rgba(255,255,255,0.65)' : '#6b6b6b');
   document.documentElement.style.setProperty('--text-tertiary', isDark ? 'rgba(255,255,255,0.4)' : '#999');
   document.documentElement.style.setProperty('--border-color', isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)');
-  document.documentElement.style.setProperty('--surface', isDark ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.6)');
-  document.documentElement.style.setProperty('--surface-border', isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)');
+  document.documentElement.style.setProperty('--surface', isDark ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.85)');
+  document.documentElement.style.setProperty('--surface-border', isDark ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.9)');
 }
 
 // --- Y Slider ---
