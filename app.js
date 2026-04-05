@@ -64,12 +64,28 @@ function updateAll() {
   updateBackground();
 }
 
+// Digital (0-255) to analog YUV ranges
+// Y: 0-1, U: -0.436 to +0.436, V: -0.615 to +0.615
+function toAnalogY(y) {
+  return y / 255;
+}
+
+function toAnalogU(u) {
+  return ((u / 255) - 0.5) * 0.872; // maps 0-255 to -0.436..+0.436
+}
+
+function toAnalogV(v) {
+  return ((v / 255) - 0.5) * 1.230; // maps 0-255 to -0.615..+0.615
+}
+
 function updateInfoPanel() {
   const [r, g, b] = yuvToRgb(state.y, state.u, state.v);
 
-  document.getElementById('val-y').textContent = state.y;
-  document.getElementById('val-u').textContent = state.u;
-  document.getElementById('val-v').textContent = state.v;
+  // Analog YUV values
+  document.getElementById('val-y-analog').textContent = toAnalogY(state.y).toFixed(3);
+  document.getElementById('val-u-analog').textContent = toAnalogU(state.u).toFixed(3);
+  document.getElementById('val-v-analog').textContent = toAnalogV(state.v).toFixed(3);
+
   document.getElementById('val-r').textContent = r;
   document.getElementById('val-g').textContent = g;
   document.getElementById('val-b').textContent = b;

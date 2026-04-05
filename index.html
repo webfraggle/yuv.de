@@ -37,25 +37,44 @@
           <div class="y-slider-track">
             <div class="y-slider-handle"></div>
           </div>
+          <div class="y-scale">
+            <span class="y-scale-tick" style="top: 0%">1.000</span>
+            <span class="y-scale-tick" style="top: 50%">0.500</span>
+            <span class="y-scale-tick" style="top: 100%">0.000</span>
+          </div>
         </div>
 
         <!-- UV Square -->
-        <div class="uv-container">
-          <canvas id="uv-canvas" width="256" height="256" role="img" aria-label="UV color plane" tabindex="0"></canvas>
-          <div class="uv-cursor"></div>
-          <div class="uv-axis uv-axis-u">U</div>
-          <div class="uv-axis uv-axis-v">V</div>
+        <div class="uv-wrap">
+          <div class="uv-scale uv-scale-v">
+            <span class="uv-scale-tick" style="top: 0%">+0.615</span>
+            <span class="uv-scale-tick" style="top: 50%">0.000</span>
+            <span class="uv-scale-tick" style="top: 100%">−0.615</span>
+            <span class="uv-scale-label">V</span>
+          </div>
+          <div class="uv-inner">
+            <div class="uv-container">
+              <canvas id="uv-canvas" width="256" height="256" role="img" aria-label="UV color plane" tabindex="0"></canvas>
+              <div class="uv-cursor"></div>
+            </div>
+            <div class="uv-scale uv-scale-u">
+              <span class="uv-scale-tick" style="left: 0%">−0.436</span>
+              <span class="uv-scale-tick" style="left: 50%">0.000</span>
+              <span class="uv-scale-tick" style="left: 100%">+0.436</span>
+              <span class="uv-scale-label">U</span>
+            </div>
+          </div>
         </div>
 
         <!-- Info Panel -->
         <div class="info-panel">
           <div class="info-swatch"></div>
           <div class="info-block">
-            <div class="info-block-label">YUV</div>
+            <div class="info-block-label">YUV (analog)</div>
             <dl class="info-values">
-              <dt>Y</dt><dd id="val-y">128</dd>
-              <dt>U</dt><dd id="val-u">128</dd>
-              <dt>V</dt><dd id="val-v">128</dd>
+              <dt>Y</dt><dd id="val-y-analog">0.500</dd>
+              <dt>U</dt><dd id="val-u-analog">0.000</dd>
+              <dt>V</dt><dd id="val-v-analog">0.000</dd>
             </dl>
           </div>
           <div class="info-block">

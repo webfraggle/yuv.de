@@ -176,6 +176,29 @@ main {
   gap: 10px;
   cursor: pointer;
   user-select: none;
+  position: relative;
+}
+
+.y-scale {
+  position: absolute;
+  left: -44px;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  padding-top: 28px; /* offset for label */
+}
+
+.y-scale-tick {
+  position: absolute;
+  right: 0;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--text-tertiary);
+  transform: translateY(-50%);
+  background: var(--surface);
+  padding: 1px 3px;
+  border-radius: 1px;
+  transition: color 0.4s ease, background 0.4s ease;
 }
 
 .y-slider-label {
@@ -239,14 +262,90 @@ main {
 
 /* === UV Square === */
 
+.uv-wrap {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  max-width: 540px;
+}
+
+.uv-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .uv-container {
   position: relative;
   aspect-ratio: 1;
-  flex: 1;
-  max-width: 500px;
+  width: 100%;
   cursor: crosshair;
   border-radius: 3px;
   overflow: hidden;
+}
+
+/* UV Scales */
+
+.uv-scale {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--text-tertiary);
+}
+
+.uv-scale-v {
+  width: 40px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.uv-scale-v .uv-scale-tick {
+  position: absolute;
+  right: 0;
+  transform: translateY(-50%);
+  background: var(--surface);
+  padding: 1px 3px;
+  border-radius: 1px;
+  transition: color 0.4s ease, background 0.4s ease;
+}
+
+.uv-scale-v .uv-scale-label {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%) rotate(-90deg);
+  font-weight: 700;
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  transition: color 0.4s ease;
+}
+
+.uv-scale-u {
+  height: 20px;
+  position: relative;
+}
+
+.uv-scale-u .uv-scale-tick {
+  position: absolute;
+  top: 2px;
+  transform: translateX(-50%);
+  background: var(--surface);
+  padding: 1px 3px;
+  border-radius: 1px;
+  transition: color 0.4s ease, background 0.4s ease;
+}
+
+.uv-scale-u .uv-scale-label {
+  position: absolute;
+  top: 2px;
+  right: -24px;
+  font-weight: 700;
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  transition: color 0.4s ease;
 }
 
 .uv-container canvas {
@@ -285,26 +384,6 @@ main {
 .uv-container:active .uv-cursor {
   width: 18px;
   height: 18px;
-}
-
-.uv-axis {
-  position: absolute;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.5);
-  pointer-events: none;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-}
-
-.uv-axis-u {
-  bottom: 8px;
-  right: 10px;
-}
-
-.uv-axis-v {
-  top: 8px;
-  left: 10px;
 }
 
 /* === Info Panel === */
@@ -628,9 +707,17 @@ main {
     transform: translateX(-50%);
   }
 
-  .uv-container {
+  .uv-wrap {
     width: 100%;
     max-width: 100%;
+  }
+
+  .y-scale {
+    display: none;
+  }
+
+  .uv-scale-v {
+    display: none;
   }
 
   .info-panel {
