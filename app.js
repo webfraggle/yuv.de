@@ -195,6 +195,123 @@ uvCanvas.addEventListener('keydown', (e) => {
   updateAll();
 });
 
+// --- Image Decomposition ---
+
+const uploadZone = document.querySelector('.upload-zone');
+const fileInput = uploadZone.querySelector('input[type="file"]');
+const channelsContainer = document.querySelector('.channels');
+const channelYCanvas = document.getElementById('channel-y');
+const channelUCanvas = document.getElementById('channel-u');
+const channelVCanvas = document.getElementById('channel-v');
+
+uploadZone.addEventListener('click', () => fileInput.click());
+
+uploadZone.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    fileInput.click();
+  }
+});
+
+fileInput.addEventListener('change', (e) => {
+  if (e.target.files.length > 0) {
+    loadImage(e.target.files[0]);
+  }
+});
+
+// Drag & drop
+uploadZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  uploadZone.classList.add('dragover');
+});
+
+uploadZone.addEventListener('dragleave', () => {
+  uploadZone.classList.remove('dragover');
+});
+
+uploadZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadZone.classList.remove('dragover');
+  if (e.dataTransfer.files.length > 0) {
+    loadImage(e.dataTransfer.files[0]);
+  }
+});
+
+function loadImage(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => decomposeImage(img);
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function decomposeImage(img) {
+  // Cap dimensions at 1200px
+  const maxDim = 1200;
+  let w = img.width;
+  let h = img.height;
+  if (w > maxDim || h > maxDim) {
+    const scale = maxDim / Math.max(w, h);
+    w = Math.round(w * scale);
+    h = Math.round(h * scale);
+  }
+
+  // Draw to offscreen canvas to read pixels
+  const offscreen = document.createElement('canvas');
+  offscreen.width = w;
+  offscreen.height = h;
+  const offCtx = offscreen.getContext('2d');
+  offCtx.drawImage(img, 0, 0, w, h);
+  const srcData = offCtx.getImageData(0, 0, w, h).data;
+
+  // Prepare channel canvases
+  [channelYCanvas, channelUCanvas, channelVCanvas].forEach(c => {
+    c.width = w;
+    c.height = h;
+  });
+
+  const yCtx = channelYCanvas.getContext('2d');
+  const uCtx = channelUCanvas.getContext('2d');
+  const vCtx = channelVCanvas.getContext('2d');
+
+  const yImg = yCtx.createImageData(w, h);
+  const uImg = uCtx.createImageData(w, h);
+  const vImg = vCtx.createImageData(w, h);
+
+  for (let i = 0; i < srcData.length; i += 4) {
+    const r = srcData[i];
+    const g = srcData[i + 1];
+    const b = srcData[i + 2];
+    const [yVal, uVal, vVal] = rgbToYuv(r, g, b);
+
+    // Y channel: grayscale
+    yImg.data[i] = yVal;
+    yImg.data[i + 1] = yVal;
+    yImg.data[i + 2] = yVal;
+    yImg.data[i + 3] = 255;
+
+    // U channel: false color (blue at 0, yellow at 255)
+    uImg.data[i] = Math.round((uVal / 255) * 255);           // R: 0→255
+    uImg.data[i + 1] = Math.round((uVal / 255) * 255);       // G: 0→255
+    uImg.data[i + 2] = Math.round(((255 - uVal) / 255) * 255); // B: 255→0
+    uImg.data[i + 3] = 255;
+
+    // V channel: false color (cyan at 0, red at 255)
+    vImg.data[i] = Math.round((vVal / 255) * 255);             // R: 0→255
+    vImg.data[i + 1] = Math.round(((255 - vVal) / 255) * 255); // G: 255→0
+    vImg.data[i + 2] = Math.round(((255 - vVal) / 255) * 255); // B: 255→0
+    vImg.data[i + 3] = 255;
+  }
+
+  yCtx.putImageData(yImg, 0, 0);
+  uCtx.putImageData(uImg, 0, 0);
+  vCtx.putImageData(vImg, 0, 0);
+
+  channelsContainer.hidden = false;
+}
+
 // --- Initial render ---
 
 updateAll();
