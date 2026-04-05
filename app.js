@@ -54,6 +54,99 @@ function renderUvPlane() {
   uvCtx.putImageData(uvImageData, 0, 0);
 }
 
+// --- Update all UI ---
+
+function updateAll() {
+  renderUvPlane();
+  updateYSliderHandle();
+  updateUvCursor();
+  updateInfoPanel();
+  updateBackground();
+}
+
+function updateInfoPanel() {
+  const [r, g, b] = yuvToRgb(state.y, state.u, state.v);
+
+  document.getElementById('val-y').textContent = state.y;
+  document.getElementById('val-u').textContent = state.u;
+  document.getElementById('val-v').textContent = state.v;
+  document.getElementById('val-r').textContent = r;
+  document.getElementById('val-g').textContent = g;
+  document.getElementById('val-b').textContent = b;
+  document.getElementById('val-hex').textContent = rgbToHex(r, g, b);
+
+  document.querySelector('.info-swatch').style.backgroundColor = rgbToHex(r, g, b);
+}
+
+function updateUvCursor() {
+  const cursor = document.querySelector('.uv-cursor');
+  const uPercent = (state.u / 255) * 100;
+  const vPercent = (state.v / 255) * 100;
+  cursor.style.left = uPercent + '%';
+  cursor.style.top = vPercent + '%';
+}
+
+function updateBackground() {
+  const [r, g, b] = yuvToRgb(state.y, state.u, state.v);
+  document.body.style.backgroundColor = rgbToHex(r, g, b);
+
+  // Switch text color based on Y value
+  const isDark = state.y <= 128;
+  document.documentElement.style.setProperty('--text-color', isDark ? '#f0f0f0' : '#111');
+  document.documentElement.style.setProperty('--text-secondary', isDark ? '#ccc' : '#555');
+  document.documentElement.style.setProperty('--border-color', isDark ? 'rgba(255,255,255,0.25)' : '#ddd');
+}
+
+// --- Y Slider ---
+
+const ySlider = document.querySelector('.y-slider');
+const ySliderTrack = document.querySelector('.y-slider-track');
+const ySliderHandle = document.querySelector('.y-slider-handle');
+
+function setYFromPointer(clientY) {
+  const rect = ySliderTrack.getBoundingClientRect();
+  const ratio = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+  // Top = 255 (white), Bottom = 0 (black)
+  state.y = Math.round(255 * (1 - ratio));
+  ySlider.setAttribute('aria-valuenow', state.y);
+  updateAll();
+}
+
+function updateYSliderHandle() {
+  const ratio = 1 - state.y / 255;
+  ySliderHandle.style.top = (ratio * 100) + '%';
+}
+
+let yDragging = false;
+
+ySliderTrack.addEventListener('pointerdown', (e) => {
+  yDragging = true;
+  ySliderTrack.setPointerCapture(e.pointerId);
+  setYFromPointer(e.clientY);
+});
+
+ySliderTrack.addEventListener('pointermove', (e) => {
+  if (!yDragging) return;
+  setYFromPointer(e.clientY);
+});
+
+ySliderTrack.addEventListener('pointerup', () => {
+  yDragging = false;
+});
+
+// Keyboard support for Y slider
+ySlider.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+    state.y = Math.min(255, state.y + (e.shiftKey ? 10 : 1));
+    updateAll();
+    e.preventDefault();
+  } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
+    state.y = Math.max(0, state.y - (e.shiftKey ? 10 : 1));
+    updateAll();
+    e.preventDefault();
+  }
+});
+
 // --- Initial render ---
 
-renderUvPlane();
+updateAll();
