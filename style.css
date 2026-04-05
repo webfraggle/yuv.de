@@ -474,37 +474,84 @@ main {
   transition: color 0.4s ease;
 }
 
+/* === Explanation === */
+
+.explanation-content {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 3px;
+  padding: 32px 36px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+.explanation-content h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+
+.explanation-content h3 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-top: 28px;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.explanation-content p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  transition: color 0.4s ease;
+}
+
+.explanation-content p:last-child {
+  margin-bottom: 0;
+}
+
+.explanation-content strong {
+  color: var(--text-color);
+  font-weight: 600;
+  transition: color 0.4s ease;
+}
+
+.explanation-content code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: rgba(0,0,0,0.05);
+  padding: 2px 6px;
+  border-radius: 2px;
+  transition: background 0.4s ease;
+}
+
 /* === Footer === */
 
-footer {
+.site-footer {
+  background: var(--surface);
+  border-top: 1px solid var(--surface-border);
   text-align: center;
   font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--text-tertiary);
   letter-spacing: 0.05em;
-  background: var(--surface);
-  display: inline-block;
-  padding: 8px 16px;
-  border-radius: 2px;
-  margin: 0 auto;
-  transition: color 0.4s ease, background 0.4s ease;
+  padding: 24px 32px;
+  transition: color 0.4s ease, background 0.4s ease, border-color 0.4s ease;
 }
 
-.footer-rule {
-  width: 40px;
-  height: 1px;
-  background: var(--border-color);
-  margin: 0 auto 16px;
-  transition: background 0.4s ease;
-}
-
-footer a {
+.site-footer a {
   color: var(--text-secondary);
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
-footer a:hover {
+.site-footer a:hover {
   color: var(--text-color);
 }
 

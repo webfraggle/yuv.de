@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YUV — Explore the YUV Color Space</title>
+  <title>YUV Color Space — Interactive Explorer, Converter &amp; Image Decomposition</title>
+  <meta name="description" content="Explore the YUV color space interactively. Pick colors on the UV chrominance plane, adjust Y luminance, convert between YUV and RGB, and decompose images into Y, U, V channels. Based on the BT.601 standard.">
+  <meta name="keywords" content="YUV, color space, BT.601, chrominance, luminance, YCbCr, RGB to YUV, color model, image decomposition, color converter">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -97,11 +99,33 @@
       </div>
     </section>
 
-    <footer class="reveal" style="--reveal-delay: 0.45s">
-      <div class="footer-rule"></div>
-      yuv.de · <a href="https://en.wikipedia.org/wiki/YUV" target="_blank" rel="noopener">Wikipedia</a> · <a href="https://modellbahn-displays.de" target="_blank" rel="noopener">modellbahn-displays.de</a>
-    </footer>
+    <!-- Explanation -->
+    <article class="explanation reveal" style="--reveal-delay: 0.4s">
+      <div class="section-label">03 — About YUV</div>
+      <div class="explanation-content">
+        <h2>What Is the YUV Color Space?</h2>
+        <p>The YUV color model separates image data into one <strong>luminance</strong> component (Y) and two <strong>chrominance</strong> components (U and V). Unlike RGB, which mixes brightness and color information across all three channels, YUV isolates perceived brightness in a single value. This distinction is the foundation of nearly all modern video compression.</p>
+
+        <h3>Y, U, and V — The Three Components</h3>
+        <p><strong>Y (Luma)</strong> represents the brightness of a pixel, calculated as a weighted sum of the red, green, and blue channels. The human eye is most sensitive to green light, which is why green carries the largest weight in the formula: <code>Y = 0.299R + 0.587G + 0.114B</code>.</p>
+        <p><strong>U (Cb)</strong> encodes the difference between blue and luminance. It answers the question: how much bluer or yellower is this pixel compared to its brightness alone?</p>
+        <p><strong>V (Cr)</strong> encodes the difference between red and luminance — capturing how much redder or more cyan a pixel appears relative to its brightness.</p>
+
+        <h3>Why YUV Matters</h3>
+        <p>The human visual system is far more sensitive to changes in brightness than to changes in color. By separating luma from chroma, YUV allows video codecs like <strong>H.264</strong>, <strong>H.265/HEVC</strong>, and <strong>AV1</strong> to compress the U and V channels more aggressively — often at half or quarter resolution (<strong>chroma subsampling</strong>, e.g. 4:2:0) — without perceptible quality loss. This is why a 4K video stream fits into a few megabits per second instead of hundreds.</p>
+
+        <h3>BT.601 vs. BT.709</h3>
+        <p>The conversion coefficients between RGB and YUV depend on the standard. <strong>BT.601</strong> (used on this page) was defined for standard-definition television. <strong>BT.709</strong> is the HD standard with slightly different weights. BT.2020 extends the model further for ultra-high-definition and wide color gamut content. The math changes, but the principle — separating brightness from color — remains the same.</p>
+
+        <h3>YUV vs. YCbCr</h3>
+        <p>Strictly speaking, YUV refers to the analog encoding used in PAL and NTSC television, while <strong>YCbCr</strong> is the digital equivalent with scaled and offset values (typically 16–235 for Y and 16–240 for Cb/Cr). In practice, the terms are often used interchangeably. The interactive tool above uses full-range (0–255) digital values following the BT.601 matrix.</p>
+      </div>
+    </article>
   </main>
+
+  <footer class="site-footer reveal" style="--reveal-delay: 0.5s">
+    yuv.de · <a href="https://en.wikipedia.org/wiki/YUV" target="_blank" rel="noopener">Wikipedia</a> · <a href="https://modellbahn-displays.de" target="_blank" rel="noopener">modellbahn-displays.de</a>
+  </footer>
 
   <script src="app.js"></script>
 </body>
