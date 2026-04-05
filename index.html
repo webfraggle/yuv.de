@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YUV — Explore the YUV Color Space</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <!-- Hero -->
+    <header class="hero">
+      <h1>YUV</h1>
+      <p class="subtitle">Explore the YUV Color Space</p>
+    </header>
+
+    <!-- Interactive Color Picker -->
+    <section class="picker">
+      <div class="picker-row">
+        <!-- Y Slider -->
+        <div class="y-slider" role="slider" aria-label="Y (Luma) value" aria-valuemin="0" aria-valuemax="255" aria-valuenow="128" tabindex="0">
+          <div class="y-slider-label">Y</div>
+          <div class="y-slider-track">
+            <div class="y-slider-handle"></div>
+          </div>
+        </div>
+
+        <!-- UV Square -->
+        <div class="uv-container">
+          <canvas id="uv-canvas" width="256" height="256" role="img" aria-label="UV color plane" tabindex="0"></canvas>
+          <div class="uv-cursor"></div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="info-panel">
+          <div class="info-swatch"></div>
+          <dl class="info-values">
+            <dt>Y</dt><dd id="val-y">128</dd>
+            <dt>U</dt><dd id="val-u">128</dd>
+            <dt>V</dt><dd id="val-v">128</dd>
+          </dl>
+          <hr class="info-divider">
+          <dl class="info-values">
+            <dt>R</dt><dd id="val-r">128</dd>
+            <dt>G</dt><dd id="val-g">128</dd>
+            <dt>B</dt><dd id="val-b">128</dd>
+          </dl>
+          <div class="info-hex" id="val-hex">#808080</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Image Decomposition -->
+    <section class="decompose">
+      <div class="upload-zone" role="button" aria-label="Upload an image" tabindex="0">
+        <p>Drop an image here or click to upload</p>
+        <input type="file" accept="image/*" hidden>
+      </div>
+      <div class="channels" hidden>
+        <div class="channel">
+          <canvas id="channel-y"></canvas>
+          <span class="channel-label">Y (Luma)</span>
+        </div>
+        <div class="channel">
+          <canvas id="channel-u"></canvas>
+          <span class="channel-label">U (Cb)</span>
+        </div>
+        <div class="channel">
+          <canvas id="channel-v"></canvas>
+          <span class="channel-label">V (Cr)</span>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <a href="https://en.wikipedia.org/wiki/YUV" target="_blank" rel="noopener">yuv.de</a>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
